@@ -1,0 +1,97 @@
+create database MyD;
+use MyD;
+
+create table Clientes(
+ID_Cliente int
+constraint PK_ID_Cliente primary key(ID_Cliente),
+Nomb_Cliente varchar(40) not null,
+Apell_Cliente varchar(40) not null,
+Cumple_Cliente date not null,
+Ubi_Cliente varchar(20) not null
+);
+
+create table Sedes(
+Cod_Sede int identity(1000,10)
+constraint PK_Cod_Sede primary key(Cod_Sede),
+ciud_Sede varchar(20) not null,
+Tel_Sede numeric(10) not null
+);
+
+create table UbiacionDepartamentos(
+Cod_UbiD int identity(2000,20)
+constraint PK_Cod_UbiD primary key(Cod_UbiD),
+Fecha_Inicio date
+);
+
+create table Facturacion(
+Cod_Factura int identity(1000,1)
+constraint PK_Cod_Factura primary key(Cod_Factura),
+);
+
+create table Servicios(
+Cod_Serv int identity(3000,50)
+constraint PK_Cod_Serv primary key(Cod_Serv),
+Tipo_Serv varchar(50),
+Descrip_Serv varchar(100)
+);
+
+create table Departamentos(
+Cod_Depart int identity (400,3) 
+constraint PK_Cod_Depart primary key(Cod_Depart),
+Descrip_Depart varchar(50) not null
+);
+
+drop table Departamentos;
+
+create table Contratacion(
+Num_Contrato int identity(500,1)
+constraint PK_Num_Contrato primary key(Num_Contrato)
+);
+
+create table JefesDepartamentos(
+Cod_Jefe int identity(600,10)
+constraint PK_Cod_Jefe primary key(Cod_Jefe),
+Nomb_Jefe varchar(30) not null,
+Apell_Jefe varchar(30) not null,
+Edad_Jefe numeric(3) not null,
+Cumple_Jefe date not null
+);
+
+Create table Empleados(
+Cod_Empleado int identity(800,1)
+constraint PK_Cod_Empleado primary key(Cod_Empleado),
+Nom_Empleado varchar(30) not null,
+Apell_Empleado varchar(30) not null,
+Edad_Empleado numeric(3) not null,
+Actividad_Empleado varchar(20) not null
+);
+
+alter table UbiacionDepartamentos add Cod_Depart int
+constraint FK_Cod_Depart foreign key(Cod_Depart) references Departamentos(Cod_Depart);
+
+exec sp_rename 'UbiacionDepartamentos','UbicacionDepartamentos';
+
+alter table UbicacionDepartamentos add Cod_Sede int
+constraint FK_Cod_Sede foreign key(Cod_Sede) references Sedes(Cod_Sede);
+
+alter table Servicios add Cod_DepartS int
+constraint FK_Cod_DepartS foreign key(Cod_DepartS) references Departamentos(Cod_Depart);
+
+alter table Facturacion add ID_Cliente int
+constraint FK_ID_Cliente foreign key(ID_Cliente) references Clientes(ID_Cliente);
+
+alter table Facturacion add Cod_Serv int
+constraint FK_Cod_Serv foreign key(Cod_Serv) references Servicios(Cod_Serv);
+
+alter table Contratacion add Cod_ServC int
+constraint FK_Cod_ServC foreign key(Cod_ServC) references Servicios(Cod_Serv);
+
+alter table Contratacion add Cod_Empleado int
+constraint FK_Cod_Empleado foreign key(Cod_Empleado) references Empleados(Cod_Empleado);
+
+
+alter table Departamentos add Cod_Jefe int
+constraint FK_Cod_Jefe foreign key(Cod_Jefe) references JefesDepartamentos(Cod_Jefe);
+
+alter table Empleados add Cod_DepartE int
+constraint FK_Cod_DepartE foreign key(Cod_DepartE) references Departamentos(Cod_Depart);

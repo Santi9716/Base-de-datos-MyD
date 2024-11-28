@@ -1,0 +1,29 @@
+--Este procedimiento sirve para consultar los departamentos que ofrecen un servicio.
+
+CREATE PROC DepartamentoPorServicio
+(@NombreServicio VARCHAR(50) = '')
+AS
+BEGIN
+	SELECT S.Tipo_Serv, S.Descrip_Serv, D.Cod_Depart,D.Descrip_Depart, D.Cod_Jefe, E.Nom_Empleado, E.Apell_Empleado
+	FROM Departamentos D INNER JOIN Servicios S
+	ON D.Cod_Depart = S.Cod_DepartS INNER JOIN Empleados E
+	On D.Cod_Jefe = E.Cod_Empleado
+	WHERE S.Tipo_Serv = 'Mantenimiento';
+END;
+
+EXEC DepartamentoPorServicio @NombreServicio = 'Consultoría';
+
+
+--Procedimiento para saber el nombre del jefe que dirige sierto departamento
+CREATE PROC JefePorDepartamento
+(
+    @CodigoDepartamento INT = 0
+)
+AS
+BEGIN
+	SELECT D.Descrip_Depart, D.Cod_Depart, J.Nomb_Jefe, J.Apell_Jefe, J.Cod_Jefe
+	From Departamentos D INNER JOIN JefesDepartamentos J
+	ON D.Cod_Jefe = J.Cod_Jefe
+	WHERE Cod_Depart = @CodigoDepartamento;
+END;
+

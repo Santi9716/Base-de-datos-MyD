@@ -14,16 +14,66 @@ END;
 EXEC DepartamentoPorServicio @NombreServicio = 'Consultoría';
 
 
+
+
 --Procedimiento para saber el nombre del jefe que dirige sierto departamento
-CREATE PROC JefePorDepartamento
+CREATE PROCEDURE JefePorDepartamento
 (
     @CodigoDepartamento INT = 0
 )
 AS
 BEGIN
 	SELECT D.Descrip_Depart, D.Cod_Depart, J.Nomb_Jefe, J.Apell_Jefe, J.Cod_Jefe
-	From Departamentos D INNER JOIN JefesDepartamentos J
+	FROM Departamentos D INNER JOIN JefesDepartamentos J
 	ON D.Cod_Jefe = J.Cod_Jefe
 	WHERE Cod_Depart = @CodigoDepartamento;
 END;
 
+
+
+
+--Este procedimiento sirve para saber cuales empleados trabajan en un departamento utilizando el código del departamento
+CREATE PROCEDURE EmpleadosPorDpeartamento
+(@CodDepartamento INT = 0)
+AS
+BEGIN
+  SELECT C.Num_Contrato, E.Nom_Empleado, E.Apell_Empleado, E.Cod_Empleado, D.Cod_Depart
+	   FROM Contratacion C INNER JOIN Empleados E
+	   ON C.Cod_Empleado = E.Cod_Empleado INNER JOIN Departamentos D
+	   ON E.Cod_DepartE = D.Cod_Depart
+	   WHERE E.Cod_DepartE = @CodDepartamento;
+	   END;
+
+	   EXEC EmpleadosPorDpeartamento @CodDepartamento = 829;
+
+
+
+--Este procedimiento sirve para saber a qué cliente pertenece cada factura, utilizando el codigo de la factura
+
+CREATE PROCEDURE FacturacionCliente
+(@NumeroFactura INT = 0)
+AS
+BEGIN
+ SELECT F.Cod_Factura, F.ID_Cliente, C.Nomb_Cliente, C.Apell_Cliente
+       FROM Facturacion F INNER JOIN Clientes C 
+       ON  F.ID_Cliente = C.ID_Cliente
+	   WHERE F.Cod_Factura = @NumeroFactura;
+END;
+
+EXEC FacturacionCliente @NumeroFactura = 1001;
+
+
+--Este procedimiento sirve para ver el historial de facturas de los clientes especificando el servicio prestado y el departamento donde se presto el servicio.
+
+CREATE PROCEDURE HistorialCliente
+(@IDCliente INT = 0)
+AS
+BEGIN
+ SELECT F.Cod_Factura, F.ID_Cliente, C.Nomb_Cliente, C.Apell_Cliente, F.Cod_Serv, S.Tipo_Serv, S.Cod_DepartS
+       FROM Facturacion F INNER JOIN Clientes C 
+       ON  F.ID_Cliente = C.ID_Cliente INNER JOIN Servicios S
+       ON  F.Cod_Serv = S.Cod_Serv
+	   WHERE F.ID_Cliente = @IDCliente;
+END;
+
+EXEC HistorialCliente @IDCliente = 5;

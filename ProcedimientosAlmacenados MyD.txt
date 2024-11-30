@@ -30,7 +30,7 @@ BEGIN
 END;
 
 
-
+EXEC JefePorDepartamento @CodigoDepartamento = ;
 
 --Este procedimiento sirve para saber cuales empleados trabajan en un departamento utilizando el código del departamento
 CREATE PROCEDURE EmpleadosPorDpeartamento
@@ -77,3 +77,20 @@ BEGIN
 END;
 
 EXEC HistorialCliente @IDCliente = 5;
+
+
+
+--Este procedimiento sirve para saber que clientes han utilizado un servicio a través de la busqueda con el codigo del servicio
+
+CREATE PROCEDURE ServiciosPorCliente
+ (@Servicio INT = 0)
+AS
+BEGIN 
+ SELECT F.Cod_Serv, F.ID_Cliente, C.Nomb_Cliente, C.Apell_Cliente
+ FROM Facturacion F INNER JOIN Clientes C
+ ON F.ID_Cliente = C.ID_Cliente
+ WHERE F.Cod_Serv = @Servicio;
+ END;
+
+ EXEC ServiciosPorCliente @Servicio = 52400;
+
